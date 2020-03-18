@@ -8,28 +8,10 @@
 
 import Foundation
 import DashDashSwift
+import ArgumentParser
 
-class ValidationChecks {
-    static func converterURL() -> URL {
-        let svg2pdfURL = URL(fileURLWithPath: "/usr/local/bin/svg2pdf")
-        if !FileManager.default.fileExists(atPath: svg2pdfURL.path) {
-            print("This tool requires svg2pdf. Please install it via HomeBrew")
-            exit(-1)
-        }
-        return svg2pdfURL
-    }
-    
-    static func swiftGenURL() -> URL? {
-        // /usr/local/bin/swiftgen
-        let swiftGenURL = URL(fileURLWithPath: "/usr/local/bin/swiftgen")
-        if FileManager.default.fileExists(atPath: swiftGenURL.path) {
-            return swiftGenURL
-        } else {
-            return nil
-        }
-    }
-    
-    enum DirectoryCheckError: String, Error {
+extension ValidationError {
+    enum DirectoryCheckError: String {
         case missingDirectories = "Input and output directories must exist"
         case noInputResourceValues = "Can't check input directory"
         case inputDirectoryCheckFailed = "Input must be a directory and must be readable"
@@ -39,25 +21,30 @@ class ValidationChecks {
         case assetCatalogNotCreated = "Could not create asset catalog at output path"
         case assetCatalogAlreadyExists = "An asset catalog already exists at the destination"
     }
-    
-    static func dataDirectories(with parser:CommandLineParser) throws -> (URL, URL) {
-        let inputDir = parser.string(forKey: .input) ?? "."
-        let assetCatalogPath = parser.string(forKey: .output) ?? "./Assets.xcassets"
-        let outputDir = (assetCatalogPath as NSString).deletingLastPathComponent
+    init(_ directoryError: DirectoryCheckError) {
+        self.init(directoryError.rawValue)
+    }
+}
 
+extension SVG2AssetArgs {
+    mutating func validateDataDirectories() throws {
+        // Guard because validation might get called more than once and this function can fail if called twice. May need to rethink that. It happens because the destination URL gets created in this function, and the function fails if the destination already exists.
+        guard inputURL == nil, assetCatalogURL == nil else { return }
+        let outputDir = (assetCatalog as NSString).deletingLastPathComponent
+        
         // Check asset catalog name
-        let assetCatalogURL = URL(fileURLWithPath: assetCatalogPath)//.resolvingSymlinksInPath()
+        let assetCatalogURL = URL(fileURLWithPath: assetCatalog)//.resolvingSymlinksInPath()
         let assetCatalogName = assetCatalogURL.lastPathComponent
         if (assetCatalogName as NSString).pathExtension != "xcassets" {
-            throw DirectoryCheckError.assetCatalogNameError
+            throw ValidationError(.assetCatalogNameError)
         }
         
         // Make sure directories exist
         if !(FileManager.default.fileExists(atPath: inputDir) && FileManager.default.fileExists(atPath: outputDir)) {
-            throw DirectoryCheckError.missingDirectories
+            throw ValidationError(.missingDirectories)
         }
-
-        if parser.bool(forKey: .force) && FileManager.default.fileExists(atPath: assetCatalogURL.path) {
+        
+        if force && FileManager.default.fileExists(atPath: assetCatalogURL.path) {
             print("Overwriting existing asset catalog at destination.")
             try FileManager.default.removeItem(at: assetCatalogURL)
         }
@@ -65,46 +52,58 @@ class ValidationChecks {
         // Make sure input and output dirs are directories and have appropriate permittions.
         let inputURL = URL(fileURLWithPath: inputDir).resolvingSymlinksInPath()
         let outputURL = URL(fileURLWithPath: outputDir)//.resolvingSymlinksInPath()
-
+        
         if let inputURLProperties = try? inputURL.resourceValues(forKeys: [.isDirectoryKey, .isReadableKey]),
             let isDirectory = inputURLProperties.isDirectory,
             let isReadable = inputURLProperties.isReadable {
             if !(isDirectory && isReadable) {
-                throw DirectoryCheckError.inputDirectoryCheckFailed
+                throw ValidationError(.inputDirectoryCheckFailed)
             }
         } else {
-            throw DirectoryCheckError.noInputResourceValues
+            throw ValidationError(.noInputResourceValues)
         }
-
+        
         if let outputURLProperties = try? outputURL.resourceValues(forKeys: [.isDirectoryKey, .isWritableKey, .isSymbolicLinkKey]),
-//            let isSymbolicLink = outputURLProperties.isSymbolicLink,
             let isDirectory = outputURLProperties.isDirectory,
             let isWriteable = outputURLProperties.isWritable {
-//            if isSymbolicLink {
-//                if let linkDestination = try? FileManager.default.destinationOfSymbolicLink(atPath: outputURL.path) {
-//                    outputURL = URL(fileURLWithPath: linkDestination)
-//                    } else {
-//
-//                    }
-//            }
             if !(isDirectory && isWriteable) {
-                throw DirectoryCheckError.outputDirectoryCheckFailed
+                throw ValidationError(.outputDirectoryCheckFailed)
             }
         } else {
-            throw DirectoryCheckError.noOutputResourceValues
+            throw ValidationError(.noOutputResourceValues)
         }
-
+        
         // Create the asset catalog directory
         if FileManager.default.fileExists(atPath: assetCatalogURL.path) {
-            throw DirectoryCheckError.assetCatalogAlreadyExists
+            throw ValidationError(.assetCatalogAlreadyExists)
         }
         
         do {
             try FileManager.default.createDirectory(at: assetCatalogURL, withIntermediateDirectories: false, attributes: nil)
         } catch {
-            throw DirectoryCheckError.assetCatalogNotCreated
+            throw ValidationError(.assetCatalogNotCreated)
         }
         
-        return (inputURL, assetCatalogURL)
+        self.inputURL = inputURL
+        self.assetCatalogURL = assetCatalogURL
     }
+    
+    mutating func validateSvg2Pdf() throws {
+        guard svg2pdfURL == nil else { return }
+        svg2pdfURL = URL(fileURLWithPath: "/usr/local/bin/svg2pdf")
+        if !FileManager.default.fileExists(atPath: svg2pdfURL.path) {
+            throw ValidationError("This tool requires svg2pdf. Please install it via HomeBrew")
+        }
+    }
+    
+    var swiftGenURL: URL? {
+        // /usr/local/bin/swiftgen
+        let swiftGenURL = URL(fileURLWithPath: "/usr/local/bin/swiftgen")
+        if FileManager.default.fileExists(atPath: swiftGenURL.path) {
+            return swiftGenURL
+        } else {
+            return nil
+        }
+    }
+
 }

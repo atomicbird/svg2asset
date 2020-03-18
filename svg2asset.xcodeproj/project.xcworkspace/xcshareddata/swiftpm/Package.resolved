@@ -2,12 +2,12 @@
   "object": {
     "pins": [
       {
-        "package": "DashDashSwift",
-        "repositoryURL": "https://github.com/chrisladd/DashDashSwift.git",
+        "package": "swift-argument-parser",
+        "repositoryURL": "https://github.com/apple/swift-argument-parser",
         "state": {
           "branch": null,
-          "revision": "a7eceff63e6582a9462acbfab24c2a49e2724613",
-          "version": "0.3.0"
+          "revision": "35b76bf577d3cc74820f8991894ce3bcdf024ddc",
+          "version": "0.0.2"
         }
       }
     ]

@@ -7,9 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		EE20A14123FC8D2400533A4B /* DashDashSwift in Frameworks */ = {isa = PBXBuildFile; productRef = EE20A14023FC8D2400533A4B /* DashDashSwift */; };
 		EE20A14323FC976700533A4B /* ValidationChecks.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE20A14223FC976700533A4B /* ValidationChecks.swift */; };
-		EE20A14523FDE0F400533A4B /* CommandLineParser+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE20A14423FDE0F400533A4B /* CommandLineParser+Extension.swift */; };
+		EEC4B07E24228CDB00D4B7DD /* ArgumentParser in Frameworks */ = {isa = PBXBuildFile; productRef = EEC4B07D24228CDB00D4B7DD /* ArgumentParser */; };
 		EED335C523FC6EE6002B8C0E /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED335C423FC6EE6002B8C0E /* main.swift */; };
 		EED335CC23FC6EFB002B8C0E /* AssetInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED335CB23FC6EFB002B8C0E /* AssetInfo.swift */; };
 /* End PBXBuildFile section */
@@ -28,7 +27,6 @@
 
 /* Begin PBXFileReference section */
 		EE20A14223FC976700533A4B /* ValidationChecks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidationChecks.swift; sourceTree = "<group>"; };
-		EE20A14423FDE0F400533A4B /* CommandLineParser+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CommandLineParser+Extension.swift"; sourceTree = "<group>"; };
 		EED335C123FC6EE6002B8C0E /* svg2asset */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = svg2asset; sourceTree = BUILT_PRODUCTS_DIR; };
 		EED335C423FC6EE6002B8C0E /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		EED335CB23FC6EFB002B8C0E /* AssetInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetInfo.swift; sourceTree = "<group>"; };
@@ -39,7 +37,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EE20A14123FC8D2400533A4B /* DashDashSwift in Frameworks */,
+				EEC4B07E24228CDB00D4B7DD /* ArgumentParser in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -68,7 +66,6 @@
 				EED335C423FC6EE6002B8C0E /* main.swift */,
 				EE20A14223FC976700533A4B /* ValidationChecks.swift */,
 				EED335CB23FC6EFB002B8C0E /* AssetInfo.swift */,
-				EE20A14423FDE0F400533A4B /* CommandLineParser+Extension.swift */,
 			);
 			path = svg2asset;
 			sourceTree = "<group>";
@@ -90,7 +87,7 @@
 			);
 			name = svg2asset;
 			packageProductDependencies = (
-				EE20A14023FC8D2400533A4B /* DashDashSwift */,
+				EEC4B07D24228CDB00D4B7DD /* ArgumentParser */,
 			);
 			productName = svg2asset;
 			productReference = EED335C123FC6EE6002B8C0E /* svg2asset */;
@@ -121,7 +118,7 @@
 			);
 			mainGroup = EED335B823FC6EE6002B8C0E;
 			packageReferences = (
-				EE20A13F23FC8D2400533A4B /* XCRemoteSwiftPackageReference "DashDashSwift" */,
+				EEC4B07C24228CDB00D4B7DD /* XCRemoteSwiftPackageReference "swift-argument-parser" */,
 			);
 			productRefGroup = EED335C223FC6EE6002B8C0E /* Products */;
 			projectDirPath = "";
@@ -137,7 +134,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EE20A14523FDE0F400533A4B /* CommandLineParser+Extension.swift in Sources */,
 				EED335CC23FC6EFB002B8C0E /* AssetInfo.swift in Sources */,
 				EED335C523FC6EE6002B8C0E /* main.swift in Sources */,
 				EE20A14323FC976700533A4B /* ValidationChecks.swift in Sources */,
@@ -306,21 +302,21 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		EE20A13F23FC8D2400533A4B /* XCRemoteSwiftPackageReference "DashDashSwift" */ = {
+		EEC4B07C24228CDB00D4B7DD /* XCRemoteSwiftPackageReference "swift-argument-parser" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/chrisladd/DashDashSwift.git";
+			repositoryURL = "https://github.com/apple/swift-argument-parser";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.3.0;
+				minimumVersion = 0.0.2;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		EE20A14023FC8D2400533A4B /* DashDashSwift */ = {
+		EEC4B07D24228CDB00D4B7DD /* ArgumentParser */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = EE20A13F23FC8D2400533A4B /* XCRemoteSwiftPackageReference "DashDashSwift" */;
-			productName = DashDashSwift;
+			package = EEC4B07C24228CDB00D4B7DD /* XCRemoteSwiftPackageReference "swift-argument-parser" */;
+			productName = ArgumentParser;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -56,6 +56,10 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "--swift-gen"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "--force"
             isEnabled = "YES">
          </CommandLineArgument>
@@ -64,7 +68,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--input /Users/tph/Downloads/feather"
+            argument = "--input-dir /Users/tph/Downloads/feather"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -72,7 +76,7 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--output /Users/tph/btsync/Projects/svg2asset/Foo.xcassets"
+            argument = "--asset-catalog /Users/tph/btsync/Projects/svg2asset/Foo.xcassets"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
