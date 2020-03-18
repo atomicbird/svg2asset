@@ -11,7 +11,7 @@ import ArgumentParser
 
 struct SVG2AssetArgs: ParsableCommand {
     static let configuration = CommandConfiguration(
-        commandName: "argtest2",
+        commandName: "svg2Asset",
         abstract: "Convert SVGs to PDF asset catalog.",
         discussion: "This tool converts a folder containing SVGs to an Xcode asset catalog and, optionally, can use SwiftGen to create Swift source code for the catalog.")
     
