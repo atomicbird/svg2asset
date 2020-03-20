@@ -36,9 +36,12 @@ struct SVG2AssetArgs: ParsableCommand {
     @Flag(name: .shortAndLong, help: "Overwrite an asset catalog at the destination, if it exists.")
     var force: Bool
     
-    @Flag(name: .shortAndLong, help: "Use SwiftGen to generate code for the asset catalog (if SwiftGen is installed).")
+    @Flag(name: .long, help: "Use SwiftGen to generate code for the asset catalog (if SwiftGen is installed).")
     var swiftGen: Bool
     
+    @Flag(name: .long, default: false, inversion: .prefixedNo, exclusivity: .exclusive, help: "Require serial processing instead of concurrent.")
+    var serial: Bool
+
     var inputURL: URL!
     var assetCatalogURL: URL!
     var svg2pdfURL: URL!
