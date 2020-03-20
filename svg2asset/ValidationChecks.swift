@@ -92,7 +92,7 @@ extension SVG2AssetArgs {
         guard svg2pdfURL == nil else { return }
         svg2pdfURL = URL(fileURLWithPath: "/usr/local/bin/svg2pdf")
         if !FileManager.default.fileExists(atPath: svg2pdfURL.path) {
-            throw ValidationError("This tool requires svg2pdf. Please install it via HomeBrew")
+            throw ValidationError("Could not find svg2pdf. Please install it via HomeBrew")
         }
     }
     
