@@ -9,6 +9,15 @@
 import Foundation
 import ArgumentParser
 
+// Set up printing to stderr
+var standardError = FileHandle.standardError
+extension FileHandle : TextOutputStream {
+    public func write(_ string: String) {
+        guard let data = string.data(using: .utf8) else { return }
+        self.write(data)
+    }
+}
+
 struct SVG2AssetArgs: ParsableCommand {
     static let configuration = CommandConfiguration(
         commandName: "svg2Asset",
@@ -71,60 +80,91 @@ encoder.outputFormatting = .prettyPrinted
 
 var imageCount = 0
 
+// Set up a dispatch group and queue to support parallel file conversions.
+let svg2pdfGroup = DispatchGroup()
+let svg2pdfQueue: DispatchQueue = {
+    if args.serial {
+        return DispatchQueue(label:"svg2asset queue")
+    } else {
+        return DispatchQueue(label: "svg2asset queue", qos: .default, attributes: .concurrent, autoreleaseFrequency: .never, target: nil)
+    }
+}()
+// Use a semaphore to wait until the dispatch group finishes.
+let loopCompleteSemaphore = DispatchSemaphore(value: 0)
+
 print("Converting SVG images at \(args.inputURL.path) to assets at \(args.assetCatalogURL.path)")
 for inputFileURL in inputFileList where inputFileURL.pathExtension == "svg" {
-//    print("Input: \(inputFileURL)")
-    let svgName = (inputFileURL.lastPathComponent as NSString).deletingPathExtension
-    if args.verbose {
-        print("Processing \(inputFileURL.lastPathComponent)")
-    }
-    let currentAssetURL = args.assetCatalogURL.appendingPathComponent("\(svgName).imageset")
-    do {
-        try FileManager.default.createDirectory(at: currentAssetURL, withIntermediateDirectories: false, attributes: nil)
-    } catch {
-        exit(-1)
-    }
-    
-    let pdfName = "\(svgName).pdf"
-    let assetInfo = AssetInfo.universalTemplateAsset(for: pdfName)
-
-    guard let assetInfoJSON = try? encoder.encode(assetInfo) else {
-        exit(-1)
-    }
-    
-    let contentsJSONURL = currentAssetURL.appendingPathComponent("Contents.json")
-    do {
-        try assetInfoJSON.write(to: contentsJSONURL)
-    } catch {
-        exit(-1)
-    }
-    
-    let pdfURL = currentAssetURL.appendingPathComponent(pdfName)
-    
-    let svg2pdfProcess = Process()
-    svg2pdfProcess.executableURL = args.svg2pdfURL
-    svg2pdfProcess.arguments = [inputFileURL.path, pdfURL.path]
-
-    let processStdErr = Pipe()
-    let processStdErrHandle = processStdErr.fileHandleForReading
-    svg2pdfProcess.standardError = processStdErr
-    svg2pdfProcess.launch()
-    svg2pdfProcess.waitUntilExit()
-
-    if svg2pdfProcess.terminationStatus != 0 {
-        let stdErrData = processStdErrHandle.readDataToEndOfFile()
-        if let stdErrString = String(data: stdErrData, encoding: .utf8) {
-            print("Conversion to PDF failed: \(stdErrString)")
-        } else {
-            print("Conversion to PDF failed")
+    svg2pdfGroup.enter()
+    svg2pdfQueue.async {
+        defer {
+            svg2pdfGroup.leave()
         }
-        exit(-1)
+        let svgName = (inputFileURL.lastPathComponent as NSString).deletingPathExtension
+        if args.verbose {
+            print("Processing \(inputFileURL.lastPathComponent)")
+        }
+        let currentAssetURL = args.assetCatalogURL.appendingPathComponent("\(svgName).imageset")
+        do {
+            try FileManager.default.createDirectory(at: currentAssetURL, withIntermediateDirectories: false, attributes: nil)
+        } catch {
+            print("Could not create asset folder for \(svgName), skipping", to: &standardError)
+            return
+        }
+        
+        let pdfName = "\(svgName).pdf"
+        let assetInfo = AssetInfo.universalTemplateAsset(for: pdfName)
+        
+        guard let assetInfoJSON = try? encoder.encode(assetInfo) else {
+            print("Could not encode JSON for \(svgName), skipping", to: &standardError)
+            return
+        }
+        
+        let contentsJSONURL = currentAssetURL.appendingPathComponent("Contents.json")
+        do {
+            try assetInfoJSON.write(to: contentsJSONURL)
+        } catch {
+            print("Could not write JSON for \(svgName), skipping", to: &standardError)
+            return
+        }
+        
+        let pdfURL = currentAssetURL.appendingPathComponent(pdfName)
+        
+        let svg2pdfProcess = Process()
+        svg2pdfProcess.executableURL = args.svg2pdfURL
+        svg2pdfProcess.arguments = [inputFileURL.path, pdfURL.path]
+        
+        let processStdErr = Pipe()
+        let processStdErrHandle = processStdErr.fileHandleForReading
+        svg2pdfProcess.standardError = processStdErr
+        svg2pdfProcess.launch()
+        svg2pdfProcess.waitUntilExit()
+        
+        if svg2pdfProcess.terminationStatus != 0 {
+            let stdErrData = processStdErrHandle.readDataToEndOfFile()
+            if let stdErrString = String(data: stdErrData, encoding: .utf8) {
+                print("Conversion to PDF failed: \(stdErrString)", to: &standardError)
+            } else {
+                print("Conversion to PDF failed", to: &standardError)
+            }
+            return
+        }
+        
+        DispatchQueue.global().async {
+            imageCount += 1
+        }
+//        svg2pdfGroup.leave()
     }
-    
-    imageCount += 1
 }
 
+svg2pdfGroup.notify(queue: svg2pdfQueue) {
+    loopCompleteSemaphore.signal()
+}
+
+
+//print("Waiting")
+loopCompleteSemaphore.wait()
 print("Processed \(imageCount) assets")
+//print("Continuing after semaphore")
 
 if args.swiftGen, let swiftGenURL = args.swiftGenURL {
     let assetCatalogName = (args.assetCatalogURL.lastPathComponent as NSString).deletingPathExtension
