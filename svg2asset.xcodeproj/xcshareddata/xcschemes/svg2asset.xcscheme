@@ -52,11 +52,15 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "-i a -o b"
+            argument = "--swift-gen"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--input-dir /private/tmp/feather-corrupt"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--swift-gen"
+            argument = "--no-serial"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -76,12 +80,8 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--asset-catalog /Users/tph/btsync/Projects/svg2asset/Foo.xcassets"
+            argument = "--asset-catalog /private/tmp/Foo.xcassets"
             isEnabled = "YES">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "--input a --output b"
-            isEnabled = "NO">
          </CommandLineArgument>
       </CommandLineArguments>
    </LaunchAction>
