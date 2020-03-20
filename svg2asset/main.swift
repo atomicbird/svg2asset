@@ -67,13 +67,23 @@ let contentsJSONString = """
 """
 
 let contentsJSONURL = args.assetCatalogURL.appendingPathComponent("Contents.json")
-try? contentsJSONString.write(to: contentsJSONURL, atomically: true, encoding: .utf8)
-
-guard var inputFileList = try? FileManager.default.contentsOfDirectory(at: args.inputURL, includingPropertiesForKeys: nil, options: []) else {
+do {
+    try contentsJSONString.write(to: contentsJSONURL, atomically: true, encoding: .utf8)
+} catch {
+    print("Could not create asset catalog at destination: \(error)", to: &standardError)
     exit(-1)
 }
 
-// Sort URLs alphabetically by file name. By default the order is not guaranteed, and it makes more sense to be ordered when seeing names go by.
+var inputFileList: [URL] = {
+    do {
+        return try FileManager.default.contentsOfDirectory(at: args.inputURL, includingPropertiesForKeys: nil, options: [])
+    } catch {
+        print("Could not read contents of directory at \(args.inputDir)", to: &standardError)
+        exit(-1)
+    }
+}()
+
+// Sort URLs alphabetically by file name so verbose output will make more sense. By default the order is not guaranteed, and it makes more sense to be ordered when seeing names go by.
 inputFileList.sort { (url1, url2) -> Bool in
     return url1.path < url2.path
 }
@@ -155,7 +165,6 @@ for inputFileURL in inputFileList where inputFileURL.pathExtension == "svg" {
         DispatchQueue.global().async {
             imageCount += 1
         }
-//        svg2pdfGroup.leave()
     }
 }
 
@@ -164,10 +173,8 @@ svg2pdfGroup.notify(queue: svg2pdfQueue) {
 }
 
 
-//print("Waiting")
 loopCompleteSemaphore.wait()
 print("Processed \(imageCount) assets")
-//print("Continuing after semaphore")
 
 if args.swiftGen, let swiftGenURL = args.swiftGenURL {
     let assetCatalogName = (args.assetCatalogURL.lastPathComponent as NSString).deletingPathExtension
