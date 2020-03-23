@@ -24,10 +24,10 @@ struct SVG2AssetArgs: ParsableCommand {
         abstract: "Convert SVGs to PDF asset catalog.",
         discussion: "This tool converts a folder containing SVGs to an Xcode asset catalog and, optionally, can use SwiftGen to create Swift source code for the catalog.")
     
-    @Option(name: .shortAndLong, default: ".", help: "Input directory containing SVGs")
+    @Option(name: .shortAndLong, default: ".", help: ArgumentHelp("Input directory containing SVGs", valueName: "dir"))
     var inputDir: String
     
-    @Option(name: .shortAndLong, default: "./Assets.xcassets", help: "Path to output asset catalog.")
+    @Option(name: .shortAndLong, default: "./Assets.xcassets", help: ArgumentHelp("Path to output asset catalog.", valueName: "path"))
     var assetCatalog: String
     
     @Flag(name: .shortAndLong, help: "Print verbose output")
