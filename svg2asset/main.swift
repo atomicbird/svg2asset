@@ -42,6 +42,9 @@ struct SVG2AssetArgs: ParsableCommand {
     @Flag(name: .long, default: false, inversion: .prefixedNo, exclusivity: .exclusive, help: "Require serial processing instead of concurrent.")
     var serial: Bool
 
+    @Option(name: .long, parsing: .upToNextOption, help: ArgumentHelp("List of names of files to convert. If this is omitted, all icons are converted."))
+    var iconNames: [String]
+    
     var inputURL: URL!
     var assetCatalogURL: URL!
     var svg2pdfURL: URL!
@@ -82,6 +85,13 @@ var inputFileList: [URL] = {
         exit(-1)
     }
 }()
+
+// Filter the file list by --icon-names, if that argument was used.
+if !args.iconNames.isEmpty {
+    inputFileList = inputFileList.filter {
+        args.iconNames.contains($0.lastPathComponent)
+    }
+}
 
 // Sort URLs alphabetically by file name so verbose output will make more sense. By default the order is not guaranteed, and it makes more sense to be ordered when seeing names go by.
 inputFileList.sort { (url1, url2) -> Bool in
