@@ -56,16 +56,16 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "--input-dir $(PROJECT_DIR)/feather/icons"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "--icon-names disc.svg delete.svg image.svg home.svg"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--input-dir /private/tmp/feather-corrupt"
-            isEnabled = "NO">
-         </CommandLineArgument>
-         <CommandLineArgument
             argument = "--no-serial"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--force"
@@ -77,14 +77,14 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--input-dir /Users/tph/Downloads/feather"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-h"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--asset-catalog /private/tmp/Foo.xcassets"
+            argument = "--asset-catalog /private/tmp/Feather.xcassets"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
