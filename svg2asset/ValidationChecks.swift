@@ -32,7 +32,7 @@ extension SVG2AssetArgs {
         let outputDir = (assetCatalog as NSString).deletingLastPathComponent
         
         // Check asset catalog name
-        let assetCatalogURL = URL(fileURLWithPath: assetCatalog)//.resolvingSymlinksInPath()
+        let assetCatalogURL = URL(fileURLWithPath: assetCatalog)
         let assetCatalogName = assetCatalogURL.lastPathComponent
         if (assetCatalogName as NSString).pathExtension != "xcassets" {
             throw ValidationError(.assetCatalogNameError)
@@ -40,6 +40,11 @@ extension SVG2AssetArgs {
         
         // Make sure directories exist
         if !(FileManager.default.fileExists(atPath: inputDir) && FileManager.default.fileExists(atPath: outputDir)) {
+            #if DEBUG
+            if !FileManager.default.fileExists(atPath: inputDir) && inputDir.hasSuffix("feather/icons") {
+                print("To run this code with the built-in Xcode arguments, please initialize the 'feather' submodule.", to: &standardError)
+            }
+            #endif
             throw ValidationError(.missingDirectories)
         }
         
@@ -50,7 +55,7 @@ extension SVG2AssetArgs {
         
         // Make sure input and output dirs are directories and have appropriate permittions.
         let inputURL = URL(fileURLWithPath: inputDir).resolvingSymlinksInPath()
-        let outputURL = URL(fileURLWithPath: outputDir)//.resolvingSymlinksInPath()
+        let outputURL = URL(fileURLWithPath: outputDir)
         
         if let inputURLProperties = try? inputURL.resourceValues(forKeys: [.isDirectoryKey, .isReadableKey]),
             let isDirectory = inputURLProperties.isDirectory,
