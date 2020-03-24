@@ -52,15 +52,19 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "--swift-gen"
-            isEnabled = "YES">
-         </CommandLineArgument>
-         <CommandLineArgument
             argument = "--input-dir $(PROJECT_DIR)/feather/icons"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "--asset-catalog /private/tmp/Feather.xcassets"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "--icon-names disc.svg delete.svg image.svg home.svg"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--swift-gen"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -76,16 +80,8 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--input-dir /Users/tph/Downloads/feather"
-            isEnabled = "NO">
-         </CommandLineArgument>
-         <CommandLineArgument
             argument = "-h"
             isEnabled = "NO">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "--asset-catalog /private/tmp/Feather.xcassets"
-            isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
    </LaunchAction>

@@ -27,6 +27,8 @@
 
 /* Begin PBXFileReference section */
 		EE20A14223FC976700533A4B /* ValidationChecks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidationChecks.swift; sourceTree = "<group>"; };
+		EED2A219242ABC5600B107ED /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		EED2A21A242AC3E000B107ED /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
 		EED335C123FC6EE6002B8C0E /* svg2asset */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = svg2asset; sourceTree = BUILT_PRODUCTS_DIR; };
 		EED335C423FC6EE6002B8C0E /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		EED335CB23FC6EFB002B8C0E /* AssetInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetInfo.swift; sourceTree = "<group>"; };
@@ -47,6 +49,8 @@
 		EED335B823FC6EE6002B8C0E = {
 			isa = PBXGroup;
 			children = (
+				EED2A219242ABC5600B107ED /* README.md */,
+				EED2A21A242AC3E000B107ED /* LICENSE.md */,
 				EED335C323FC6EE6002B8C0E /* svg2asset */,
 				EED335C223FC6EE6002B8C0E /* Products */,
 			);
