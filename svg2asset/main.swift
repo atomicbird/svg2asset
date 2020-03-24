@@ -20,7 +20,7 @@ extension FileHandle : TextOutputStream {
 
 struct SVG2AssetArgs: ParsableCommand {
     static let configuration = CommandConfiguration(
-        commandName: "svg2Asset",
+        commandName: ProcessInfo.processInfo.processName,
         abstract: "Convert SVGs to PDF asset catalog.",
         discussion: "This tool converts a folder containing SVGs to an Xcode asset catalog and, optionally, can use SwiftGen to create Swift source code for the catalog.")
     
