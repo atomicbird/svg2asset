@@ -25,11 +25,14 @@ struct AssetInfo: Codable {
     }
     let images: [Images]
     let info: ImageInfo
-    let properties: Properties
+    let properties: Properties?
 }
 
 extension AssetInfo {
-    static func universalTemplateAsset(for filename:String) -> AssetInfo {
-        return AssetInfo(images: [AssetInfo.Images(idiom: "universal", filename: filename)], info: AssetInfo.ImageInfo(), properties: AssetInfo.Properties(templateRenderingIntent: "template"))
+    static func universalAsset(for filename:String, template: Bool) -> AssetInfo {
+        return AssetInfo(images: [AssetInfo.Images(idiom: "universal", filename: filename)],
+                         info: AssetInfo.ImageInfo(),
+                         properties: template ? AssetInfo.Properties(templateRenderingIntent: "template") : nil
+        )
     }
 }

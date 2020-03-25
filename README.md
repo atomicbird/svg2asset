@@ -1,6 +1,6 @@
 #  svg2asset - Bulk convert SVGs to an Xcode asset catalog
 
-This command-line tool will convert one or more directories containing SVG image files to an asset catalog suitable for use in Xcode. The asset catalog contains PDF images configured with a single scale, for use as template images. The tool can also use [SwiftGen](https://github.com/SwiftGen/SwiftGen) to create a source file for the images in the asset catalog, if SwiftGen is installed. 
+This command-line tool will convert one or more directories containing SVG image files to an asset catalog suitable for use in Xcode. The asset catalog contains PDF images configured with a single scale, optionally for use as template images. The tool can also use [SwiftGen](https://github.com/SwiftGen/SwiftGen) to create a source file for the images in the asset catalog, if SwiftGen is installed. 
 
 The [Feather icon set](git@github.com:feathericons/feather.git) is included as a submodule to provide a large set of sample SVGs.
 
@@ -16,12 +16,13 @@ If you included Feather, you can now run the tool from Xcode and see sample resu
 
 The command options are:
 
-    svg2asset [--input-dir <dir>] [--asset-catalog <path>] [--verbose] [--force] [--swift-gen] [--serial] [--no-serial] [--icon-names <icon-names> ...]
+    svg2asset [--input-dir <dir>] [--asset-catalog <path>] [--verbose] [--force] [--swift-gen] [--serial] [--no-serial] [--template] [--no-template] [--icon-names <icon-names> ...]
 
 Options are defined as follows:
 
 - `-i, --input-dir <dir>` Input directory containing SVGs (default: .)
 - `-a, --asset-catalog <path>` Path to output asset catalog. (default:./Assets.xcassets)
+- `-t, --template/--no-template` Make image assets into template images ("Render As" will be set to "Template Image" in Xcode) (default: false)
 - `-v, --verbose` Print verbose output 
 - `-f, --force` Overwrite an asset catalog at the destination, if it exists. 
 - `--swift-gen` Use SwiftGen to generate code for the asset catalog (if SwiftGen is installed). 
@@ -31,7 +32,7 @@ Options are defined as follows:
 
 The default options included in the project file execute the command as follows:
 
-    svg2asset --input-dir $(PROJECT_DIR)/feather/icons --asset-catalog /private/tmp/Feather.xcassets --icon-names disc.svg delete.svg image.svg home.svg --swift-gen --force -v
+    svg2asset --input-dir $(PROJECT_DIR)/feather/icons --asset-catalog /private/tmp/Feather.xcassets --template --icon-names disc.svg delete.svg image.svg home.svg --swift-gen --force -v
 
 This means:
 

@@ -60,6 +60,10 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "--template"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "--icon-names disc.svg delete.svg image.svg home.svg"
             isEnabled = "YES">
          </CommandLineArgument>

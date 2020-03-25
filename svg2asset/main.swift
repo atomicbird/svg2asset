@@ -41,6 +41,9 @@ struct SVG2AssetArgs: ParsableCommand {
     
     @Flag(name: .long, default: false, inversion: .prefixedNo, exclusivity: .exclusive, help: "Require serial processing instead of concurrent.")
     var serial: Bool
+    
+    @Flag(name: .shortAndLong, default: false, inversion: .prefixedNo, exclusivity: .exclusive, help: #"Make image assets into template images ("Render As" will be set to "Template Image" in Xcode)"#)
+    var template: Bool
 
     @Option(name: .long, parsing: .upToNextOption, help: ArgumentHelp("List of names of files to convert. If this is omitted, all icons are converted."))
     var iconNames: [String]
@@ -135,7 +138,7 @@ for inputFileURL in inputFileList where inputFileURL.pathExtension == "svg" {
         }
         
         let pdfName = "\(svgName).pdf"
-        let assetInfo = AssetInfo.universalTemplateAsset(for: pdfName)
+        let assetInfo = AssetInfo.universalAsset(for: pdfName, template: true)
         
         guard let assetInfoJSON = try? encoder.encode(assetInfo) else {
             print("Could not encode JSON for \(svgName), skipping", to: &standardError)
