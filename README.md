@@ -6,7 +6,7 @@ The [Feather icon set](git@github.com:feathericons/feather.git) is included as a
 
 ## Installing
 
-- **Get the source**. Clone this repository. If you want to include a sample collection of SVGs, be sure to use `git clone --recursive` so that the Feather icon set will be included.
+- **Get the source**. Clone this repository. If you want to include a sample collection of SVGs, be sure to use `git clone --recursive` so that the Feather icon set will be included. If you already cloned the repo and want to add the Feather SVGs, use `git submodule update --init` to add them.
 - **Install `svg2pdf`**. This tool uses `svg2pdf` (part of [Cairo](https://www.cairographics.org/)) to convert images. The easiest way to get this is with [Homebrew](https://brew.sh/). This tool will not work if `svg2pdf` is not installed.
 - (optional) **Install SwiftGen**. If you have [SwiftGen](https://github.com/SwiftGen/SwiftGen), you can generate Swift source code for the asset catalog. SwiftGen can also be installed with Homebrew. 
 
