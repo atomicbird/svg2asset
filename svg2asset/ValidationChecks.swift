@@ -94,7 +94,10 @@ extension SVG2AssetArgs {
     
     mutating func validateSvg2Pdf() throws {
         guard svg2pdfURL == nil else { return }
-        svg2pdfURL = URL(fileURLWithPath: "/usr/local/bin/svg2pdf")
+        let svg2pdfPath = isAppleSilicon() ? "/opt/homebrew/bin/svg2pdf" : "/usr/local/bin/svg2pdf"
+
+        svg2pdfURL = URL(fileURLWithPath: svg2pdfPath)
+
         if !FileManager.default.fileExists(atPath: svg2pdfURL.path) {
             throw ValidationError("Could not find svg2pdf. Please install it via HomeBrew")
         }
@@ -108,6 +111,23 @@ extension SVG2AssetArgs {
         } else {
             return nil
         }
+    }
+
+    func isAppleSilicon() -> Bool {
+        getMachineHardwareName() == "arm64"
+    }
+
+    func getMachineHardwareName() -> String? {
+        var sysInfo = utsname()
+        let retVal = uname(&sysInfo)
+
+        guard retVal == EXIT_SUCCESS else { return nil }
+
+        let machine = withUnsafeBytes(of: &sysInfo.machine) { pointer in
+            String(cString: pointer.baseAddress!.assumingMemoryBound(to: CChar.self))
+        }
+
+        return machine.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
 }
